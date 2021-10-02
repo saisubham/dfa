@@ -49,7 +49,7 @@ func main() {
 ```
 
 ## Running
-Assuming sample program is stored in sample.go
+Assuming sample program is stored in main.go
 ```
 go run main.go
 ```
