@@ -20,9 +20,14 @@ go test -v
 ## Sample program
 ```
 func main() {
-	dfa, err := MakeDFA(3, []rune{'0', '1'}, []int{0})
+	dfa, err := MakeDFA(
+		[]int{0, 1, 2},   // all states
+		[]rune{'0', '1'}, // all symbols
+		0,                // initial state
+		[]int{0},         // final states
+	)
 	if err != nil {
-		log.Printf(err.Error())
+		t.Fail()
 	}
 	err = dfa.AddTransitions([]*Transitions{
 		{0, '0', 0},
@@ -33,14 +38,14 @@ func main() {
 		{2, '1', 2},
 	})
 	if err != nil {
-		log.Printf(err.Error())
+		t.Fail()
 	}
-	res, err := dfa.Run("1001")
+	out, err := dfa.Run("1001")
 	if err != nil {
 		log.Printf(err.Error())
 	}
 
-	if res {
+	if out {
 		fmt.Println("accepted")
 	} else {
 		fmt.Println("rejected")
