@@ -57,7 +57,7 @@ func (dfa *DFA) AddTransition(src int, input rune, dst int) error {
 
 	// check if valid input symbol
 	if pos := strings.IndexRune(string(dfa.inputSymbols), input); pos == -1 {
-		return errors.New("bad input symbol")
+		return &BadInputError{input}
 	}
 	dfa.transitions[TransitionInput{src, input}] = dst
 	return nil
@@ -96,9 +96,10 @@ func (dfa *DFA) PrintTransitionTable() {
 func (dfa *DFA) Run(s string) (bool, error) {
 	curState := int(dfa.initState)
 	for _, c := range s {
-		nextState, prs := dfa.transitions[TransitionInput{curState, c}]
+		tIn := TransitionInput{curState, c}
+		nextState, prs := dfa.transitions[tIn]
 		if !prs {
-			return false, errors.New("bad transition input")
+			return false, &BadTransitionInputError{tIn}
 		}
 		curState = nextState
 	}

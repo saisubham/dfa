@@ -6,29 +6,40 @@ import (
 
 func TestMultipleOf3(t *testing.T) {
 	testCases := []struct {
-		desc     string
-		input    string
-		expected bool
+		desc    string
+		input   string
+		want    bool
+		wantErr error
 	}{
 		{
-			desc:     "should be true for 0",
-			input:    "0",
-			expected: true,
+			desc:    "should be true for 0",
+			input:   "0",
+			want:    true,
+			wantErr: nil,
 		},
 		{
-			desc:     "should be false for 1",
-			input:    "1",
-			expected: false,
+			desc:    "should be false for 1",
+			input:   "1",
+			want:    false,
+			wantErr: nil,
 		},
 		{
-			desc:     "should be true for 9",
-			input:    "1001",
-			expected: true,
+			desc:    "should be true for 9",
+			input:   "1001",
+			want:    true,
+			wantErr: nil,
 		},
 		{
-			desc:     "should be false for 19",
-			input:    "10011",
-			expected: false,
+			desc:    "should be false for 19",
+			input:   "10011",
+			want:    false,
+			wantErr: nil,
+		},
+		{
+			desc:    "should throw error for invalid input",
+			input:   "abc",
+			want:    false,
+			wantErr: &BadTransitionInputError{},
 		},
 	}
 
@@ -50,11 +61,8 @@ func TestMultipleOf3(t *testing.T) {
 
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			res, err := dfa.Run(tC.input)
-			if err != nil {
-				t.Fail()
-			}
-			if res != tC.expected {
+			got, err := dfa.Run(tC.input)
+			if tC.wantErr != nil && err == nil || got != tC.want {
 				t.Fail()
 			}
 		})
