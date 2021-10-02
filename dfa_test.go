@@ -43,7 +43,12 @@ func TestMultipleOf3(t *testing.T) {
 		},
 	}
 
-	dfa, err := MakeDFA(3, []rune{'0', '1'}, []int{0})
+	dfa, err := MakeDFA(
+		[]int{0, 1, 2},   // all states
+		[]rune{'0', '1'}, // all symbols
+		0,                // initial state
+		[]int{0},         // final states
+	)
 	if err != nil {
 		t.Fail()
 	}
@@ -58,10 +63,13 @@ func TestMultipleOf3(t *testing.T) {
 	if err != nil {
 		t.Fail()
 	}
+	dfa.PrintTransitionTable()
 
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			got, err := dfa.Run(tC.input)
+			// TODO: here I want to compare specific error objects
+			// perferably using errors.As(error,interface{}) but I don't know how
 			if tC.wantErr != nil && err == nil || got != tC.want {
 				t.Fail()
 			}
